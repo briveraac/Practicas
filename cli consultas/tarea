@@ -1,0 +1,49 @@
+1. Exploración del archivo
+    1. Lee el CSV e informa cuántas filas y columnas tiene.
+    2. Muestra el tipo de dato de cada columna.
+    3. Cuenta valores vacíos por columna.
+    4. Lista los valores únicos de category, payment_method, region y status.
+    5. Calcula cuántos order_id aparecen más de una vez.
+    Resultado esperado: un pequeño resumen de calidad del archivo.
+
+2. Limpieza con Python
+    1. Convierte order_date a fecha y detecta las fechas que no se pueden interpretar.
+    2. Convierte quantity y unit_price_clp a números.
+    3. Busca cantidades y precios nulos, inválidos o negativos.
+    4. Normaliza mayúsculas, minúsculas y espacios en category, payment_method, region y status.
+    5. Identifica el registro duplicado por order_id y define una regla para tratarlo.
+    6. Decide qué hacer con los pedidos que no tienen customer_id o product.
+    Desafío: guarda los registros problemáticos en un archivo rechazados.csv y los válidos en ventas_limpias.csv. No borres silenciosamente las filas rechazadas.
+    
+3. Consultas SQL
+    Carga los datos limpios en PostgreSQL o consúltalos con DuckDB. Responde:
+    1. ¿Cuántas ventas hay por región?
+    2. ¿Cuál es la cantidad de pedidos y el total vendido por categoría?
+    3. ¿Cuáles son los cinco productos con mayores ventas?
+    4. ¿Qué método de pago se usa más?
+    5. ¿Cuántos pedidos hay por estado?
+    6. ¿Cuál fue la venta total por mes?
+    7. ¿Quiénes son los cinco clientes con mayor gasto?
+    8. ¿Qué porcentaje de pedidos está cancelado?
+    Calcula el monto de cada línea como quantity * unit_price_clp. Define explícitamente si “ventas” incluye pedidos pendientes, cancelados o devueltos.
+
+4. Modelado para dbt
+    Crea tres capas:
+    - Staging: nombres consistentes, tipos correctos y normalización básica.
+    - Intermediate: cálculos como monto de línea y agrupaciones reutilizables.
+    - Marts: tablas finales para análisis de ventas, productos, clientes y regiones.
+    Agrega pruebas para detectar:
+    - order_id duplicados;
+    - campos obligatorios nulos;
+    - cantidades o precios negativos;
+    - estados fuera de los valores permitidos;
+    - fechas inválidas.
+    
+5. Pipeline
+    Cuando tengas instalados Docker y Airflow:
+    1. Programa el flujo para ejecutarlo diariamente.
+    2. Haz que una segunda ejecución del mismo día no duplique pedidos.
+    3. Registra cuántas filas se leyeron, aceptaron y rechazaron.
+    4. Simula un fallo en la carga y configura un reintento.
+    5. Añade una tarea que falle si la cantidad de filas inválidas supera un límite definido por ti.
+    Regla de práctica: guarda el CSV original sin cambios y versiona tu código. Así puedes rehacer la limpieza desde el comienzo cuando cambies una regla.
